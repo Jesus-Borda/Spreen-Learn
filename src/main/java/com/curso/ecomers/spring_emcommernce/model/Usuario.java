@@ -1,6 +1,14 @@
 package com.curso.ecomers.spring_emcommernce.model;
 
+import jakarta.persistence.*;
+
+import java.util.List;
+
+@Entity
+@Table (name = "usuarios")
 public class Usuario {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nombre;
     private String username;
@@ -10,11 +18,16 @@ public class Usuario {
     private String telefono;
     private String tipo;
     private String password;
+    @OneToMany(mappedBy = "usuario")
+    private List <Producto> productos;
+    //resibe la lista de productos
+    @OneToMany(mappedBy = "usuario")
+    private List <Orden> ordenes;
 
     public Usuario() {
     }
 
-    public Usuario(Integer id, String nombre, String username, String apellido, String email, String direccion, String telefono, String tipo, String password) {
+    public Usuario(Integer id, String nombre, String username, String apellido, String email, String direccion, String telefono, String tipo, String password, List<Producto> productos) {
         this.id = id;
         this.nombre = nombre;
         this.username = username;
@@ -24,6 +37,7 @@ public class Usuario {
         this.telefono = telefono;
         this.tipo = tipo;
         this.password = password;
+        this.productos = productos;
     }
 
     public Integer getId() {
@@ -97,6 +111,16 @@ public class Usuario {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public List<Producto> getProductos() {
+        return productos;
+    }
+
+    public void setProductos(List<Producto> productos) {
+        this.productos = productos;
+    }
+
+
 
     @Override
     public String toString() {
