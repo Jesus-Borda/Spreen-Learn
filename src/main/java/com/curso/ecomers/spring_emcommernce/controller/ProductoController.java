@@ -8,6 +8,7 @@
     import org.slf4j.LoggerFactory;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.stereotype.Controller;
+    import org.springframework.ui.Model;
     import org.springframework.web.bind.annotation.GetMapping;
     import org.springframework.web.bind.annotation.PostMapping;
     import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +22,8 @@
         private ProductoService productoService;
         //NOS TRAE LA VISTA
         @GetMapping("")
-        public String show(){
+        public String show( Model model){
+            model.addAttribute("productos", productoService.findAll());
             //Lo que hace es redireccionar al archivo
 
             return "productos/show";
