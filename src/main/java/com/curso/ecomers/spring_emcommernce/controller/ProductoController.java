@@ -43,7 +43,11 @@
 
             return "productos/edit";
         }
-
+        @GetMapping("/delete/{id}")
+        public String delete (@PathVariable Integer id){
+            productoService.delete(id);
+            return "redirect:/productos";
+        }
         //------------------------------------------------------METODOS ----------------
         @PostMapping("/save")
         public String save ( Producto producto){
@@ -61,4 +65,6 @@
             productoService.update(producto);
             return "redirect:/productos";
         }
+
+
     }
