@@ -9,9 +9,9 @@
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.stereotype.Controller;
     import org.springframework.ui.Model;
-    import org.springframework.web.bind.annotation.GetMapping;
-    import org.springframework.web.bind.annotation.PostMapping;
-    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.*;
+
+    import java.util.Optional;
 
     @Controller
     @RequestMapping("/productos")
@@ -32,6 +32,17 @@
         public  String create (){
             return "productos/create";
         }
+        //ACTUALIZAR
+        @GetMapping("/edit/{id}")
+        public String edit (@PathVariable Integer id, Model model){
+            Producto producto = new Producto();
+            Optional <Producto> optionalProducto=productoService.get(id);
+            producto = optionalProducto.get();
+            LOGGER.info("producto buscado: {}", producto );
+            model.addAttribute("producto",producto);
+
+            return "productos/edit";
+        }
 
         //------------------------------------------------------METODOS ----------------
         @PostMapping("/save")
@@ -41,6 +52,13 @@
             usuario.setId(1);
             producto.setUsuario(usuario);
             productoService.save(producto);
+            return "redirect:/productos";
+        }
+        @PostMapping ("/update")
+        public String updateForId (Producto producto){
+            LOGGER.info("Producto Actualizado {}",producto);
+
+            productoService.update(producto);
             return "redirect:/productos";
         }
     }
