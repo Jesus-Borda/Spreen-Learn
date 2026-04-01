@@ -70,6 +70,7 @@
         @PostMapping("/save")
         public String save (Producto producto, @RequestParam("img") MultipartFile file) throws IOException {
             LOGGER.info("Este es el objeto del producto {}",producto);
+
             Usuario usuario = new Usuario();
             usuario.setId(1);
             producto.setUsuario(usuario);
@@ -89,13 +90,13 @@
         @PostMapping ("/update")
         public String updateForId (Producto producto,  @RequestParam("img") MultipartFile file) throws IOException {
             LOGGER.info("Producto Actualizado {}",producto);
+            Producto p = new Producto();
+            p=productoService.get(producto.getId()).get();
             if (file.isEmpty()){//EDITAMOS PERO N QUITAMOS LA IMAGEN
-                Producto p = new Producto();
-                p=productoService.get(producto.getId()).get();
+
                 producto.setImagen(p.getImagen());
             } else{//Cuando se edita tambien la imagen
-                Producto p = new Producto();
-                p=productoService.get(producto.getId()).get();
+
                 //Eliminar imagen cuando no sea la de default
                 if (!p.getImagen().equals("default.jpg")){
                     upload.deleteImage(p.getImagen());
@@ -105,6 +106,7 @@
                 producto.setImagen(nombreImagen);
 
             }
+            producto.setUsuario(p.getUsuario());
             productoService.update(producto);
             return "redirect:/productos";
         }
