@@ -25,7 +25,7 @@ public class HomeController {
     @Autowired
     private  ProductoService productoService;
     //PARA ALMACENAR LOS DETALLES DE LA ORDEN
-    private List<DetalleOrden> detalleOrdens=new ArrayList<DetalleOrden>();
+    private List<DetalleOrden> detalles=new ArrayList<DetalleOrden>();
     //DATOS DE LA ORDEN
     Orden orden = new Orden();
     @GetMapping("")
@@ -45,14 +45,27 @@ public class HomeController {
          return "usuario/productohome";
     }
     @PostMapping("/cart")
-    public String addCart(@RequestParam Integer id, @RequestParam Integer cantidad){
+    public String addCart(@RequestParam Integer id, @RequestParam Integer cantidad, Model model){
         log.info("ID producto envado al carrito {} ", id);
         DetalleOrden detalleOrden = new DetalleOrden();
         Producto producto = new Producto();
+        double sumaTotal =0;
+
         Optional<Producto> productoOptional = productoService.get(id);
         log.info("producto añadido {} ", productoOptional.get());
         log.info("Cantidad {} ",cantidad);
-       // producto=producto.setCantidad();
+        producto=productoOptional.get();
+        detalleOrden.setCantidad(cantidad);
+        detalleOrden.setPrecio(producto.getPrecio());
+        detalleOrden.setNombre(producto.getNombre());
+        detalleOrden.setTotal(producto.getPrecio()*cantidad);
+        detalleOrden.setProducto(producto);
+        detalles.add(detalleOrden);
+
+        sumaTotal = detalles.stream().mapToDouble(dt -> dt.getTotal()).sum();
+        orden.setTotal(sumaTotal);
+        model.addAttribute("cart", detalles);
+        model.addAttribute("orden", orden);
 
     return "usuario/carrito";
     }
