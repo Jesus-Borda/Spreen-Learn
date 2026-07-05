@@ -62,7 +62,7 @@
 
             productoService.delete(id);
             return "redirect:/productos";
-
+    
         }
 
 
